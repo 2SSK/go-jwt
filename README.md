@@ -1,6 +1,6 @@
-# Jwt Backend
+# JWT Backend
 
-A production-ready Go backend jwt using Echo framework, PostgreSQL, and comprehensive observability features.
+A production-ready Go backend JWT using Echo framework, PostgreSQL, and comprehensive observability features.
 
 ## Features
 
@@ -44,8 +44,8 @@ A production-ready Go backend jwt using Echo framework, PostgreSQL, and comprehe
 
    ```bash
    # Ensure PostgreSQL is running
-   # Run migrations (only in non-local environments)
-   go-task migrate
+    # Run migrations (only in non-local environments)
+    go-task migrations:up
    ```
 
 5. **Run the application**
@@ -79,26 +79,86 @@ See `.env.sample` for all available options.
 - `go-task build` - Build the application
 - `go-task test` - Run tests
 - `go-task lint` - Run linters
-- `go-task migrate` - Run database migrations
+- `go-task migrations:up` - Run database migrations
 
 ### Project Structure
 
 ```
-├── cmd/jwt/     # Application entry point
+├── cmd/
+│   └── jwt/
+│       └── main.go  # Application entry point
 ├── internal/
-│   ├── config/          # Configuration management
-│   ├── database/        # Database setup and migrations
-│   ├── handler/         # HTTP handlers
-│   ├── logger/          # Logging setup
-│   ├── middleware/      # Echo middlewares
-│   ├── repository/      # Data access layer
-│   ├── router/          # Route definitions
-│   ├── server/          # Server setup
-│   ├── service/         # Business logic
-│   └── validation/      # Input validation
-├── static/              # Static assets (OpenAPI docs)
-├── .env.sample          # Environment template
-└── Taskfile.yml         # Development tasks
+│   ├── config/
+│   │   ├── config.go
+│   │   └── observability.go  # Configuration management
+│   ├── database/
+│   │   ├── migrations/
+│   │   │   ├── 001_setup.sql
+│   │   │   ├── 002_user.sql
+│   │   │   └── 003_create_users.sql
+│   │   ├── database.go
+│   │   └── migrator.go  # Database setup and migrations
+│   ├── errs/
+│   │   ├── http.go
+│   │   └── types.go  # Custom error types
+│   ├── handler/
+│   │   ├── auth.go
+│   │   ├── base.go
+│   │   ├── handlers.go
+│   │   ├── health.go
+│   │   ├── home.go
+│   │   ├── openapi.go
+│   │   └── user.go  # HTTP handlers
+│   ├── lib/
+│   │   ├── authhelper.go
+│   │   └── utils.go  # Utility functions
+│   ├── logger/
+│   │   └── logger.go  # Logging setup
+│   ├── middleware/
+│   │   ├── auth.go
+│   │   ├── context.go
+│   │   ├── global.go
+│   │   ├── middlewares.go
+│   │   ├── rate_limit.go
+│   │   └── request_id.go  # Echo middlewares
+│   ├── model/
+│   │   ├── user/
+│   │   │   ├── dto.go
+│   │   │   └── user.go
+│   │   └── model.go  # Data models
+│   ├── repository/
+│   │   ├── repositories.go
+│   │   └── user.go  # Data access layer
+│   ├── router/
+│   │   ├── v1/
+│   │   │   ├── auth.go
+│   │   │   ├── user.go
+│   │   │   └── v1.go
+│   │   ├── router.go
+│   │   └── system.go  # Route definitions
+│   ├── server/
+│   │   └── server.go  # Server setup
+│   ├── service/
+│   │   ├── auth.go
+│   │   ├── services.go
+│   │   └── user.go  # Business logic
+│   ├── sqlerr/
+│   │   ├── error.go
+│   │   └── handler.go  # SQL error handling
+│   └── validation/
+│       └── utils.go  # Input validation
+├── static/
+│   ├── openapi.html
+│   └── openapi.json  # Static assets (OpenAPI docs)
+├── .env.sample  # Environment template
+├── .gitignore
+├── .golangci.yml
+├── go.dockerfile
+├── go.mod
+├── go.sum
+├── LICENSE
+├── README.md
+└── Taskfile.yml  # Development tasks
 ```
 
 ## Observability
